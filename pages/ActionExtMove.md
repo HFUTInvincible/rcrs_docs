@@ -2,16 +2,14 @@
 	- [[PathPlanning]] pathPlanning
 	- [[EntityID]] target
 	- TODO thresholdRest
-	  collapsed:: true
 		- Decide whether the agent needs to rest.
 		- Initialized in constructor
 		-
 		  ``` java
 		  this.thresholdRest = developData.getInteger( "ActionExtMove.rest", 100 );
 		  ```
-		- Used in needRest( [[Human]] agent)
+		- Used in ((cea5625f-888a-42fb-bcb3-24366c202ef7))
 	- TODO kernelTime
-	  collapsed:: true
 		- Initialized in precompute, resume, preparate
 		-
 		  ``` java
@@ -21,7 +19,7 @@
 		      this.kernelTime = -1;
 		  }
 		  ```
-		- Used in needRest( [[Human]] agent)
+		- Used in ((cea5625f-888a-42fb-bcb3-24366c202ef7))
 	- [[HfutMessageTool]] messageTool
 -
 ## Methods
@@ -85,6 +83,7 @@
 		  ```
 	- TODO needRest( [[Human]] agent)
 	  collapsed:: true
+	  id:: cea5625f-888a-42fb-bcb3-24366c202ef7
 		- Determine whether the agent need to rest.
 		-
 		  ``` java
