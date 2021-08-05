@@ -82,8 +82,8 @@
 		  }
 		  ```
 	- TODO needRest( [[Human]] agent)
-	  collapsed:: true
 	  id:: cea5625f-888a-42fb-bcb3-24366c202ef7
+	  collapsed:: true
 		- Determine whether the agent need to rest.
 		-
 		  ``` java
