@@ -1,0 +1,45 @@
+## Fields
+	- [[PathPlanning]] pathPlanning
+	- [[EntityID]] target
+	- int oldClearX
+	- int oldClearY
+	- int count
+	- boolean JudgeWhetherINeedContinue
+	- int lastTime
+	- int forcedMove
+	- int thresholdRest
+	- int kernelTime
+	- int lastLocationX
+	- int lastLocationY
+	- int lastDestinationX
+	- int lastDestinationY
+	- int myClearRadius
+	- int theClearDistance
+## Methods
+	- [[ExtAction]] updateInfo([[MessageManager]] messageManager)
+	- [[ExtAction]] setTarget([[EntityID]] target)
+	- [[ExtAction]] calc()
+	- [[Action]] getAction()
+	- boolean isCurve([[Area]] previous, [[Area]] current, [[Area]] next, [[Vector2D]] edgeline)
+	- boolean isClearable([[PoliceForce]] policeForce, [[Blockade]] blockade, [[Vector2D]] clearline)
+	- double getAcuteAngle([[Vector2D]] first, [[Vector2D]] second)
+	- [[Action]] tryAreaClear([[PoliceForce]] police, [[EntityID]] target)
+	- [[Vector2D]] scaleClear([[Vector2D]] vector)
+	- boolean intersectTwo([[Blockade]] blockade, [[Blockade]] another)
+	- [[Action]] getRescueAction(PoliceForce police, Edge nextEgde)
+	- [[Action]] getNeighbourAction(PoliceForce police, Area target)
+	- [[Action]] calcRest([[Human]] human, [[PathPlanning]] pathPlanning, Collection<[[EntityID]]> targets)
+	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range)
+	- [[Action]] getAreaClearAction([[PoliceForce]] police)
+	- [[Action]] getTheContinueAction([[PoliceForce]] police)
+	- boolean isInside(double pX, double pY, [[Blockade]] blockade)
+	- double getAngle([[Vector2D]] v1, [[Vector2D]] v2)
+	- boolean JudgeWhetherNearBlockade(double pX, double pY, [[Blockade]] blockade, double range)
+	- boolean intersect([[Blockade]] blockade, [[Blockade]] another)
+	- boolean intersect(double agentX, double agentY, double pointX, double pointY, [[Blockade]] blockade)
+	- double getDistance(double fromX, double fromY, double toX, double toY)
+	- [[Point2D]] getMidPoint([[Line2D]] line)
+	- Set<[[Edge]]> getAllThePassableEdge([[Area]] area)
+	- boolean needRest([[Human]] agent)
+	- [[StandardEntity]] getTheClosestEntity(Collection<? extends [[StandardEntity]]> entities, [[StandardEntity]] reference)
+	- void getTheInfomationOfTheWorld()

@@ -7,11 +7,11 @@
 	- Manager
 		- [[ModuleManager]] moduleManager
 	- counter
-		- countPrecompute
-		- countResume
-		- countPreparate
-		- countUpdateInfo
-	- countUpdateInfoCurrentTime (This is NOT a counter actually)
+		- int countPrecompute
+		- int countResume
+		- int countPreparate
+		- int countUpdateInfo
+	- int countUpdateInfoCurrentTime (_This is NOT a counter actually_)
 	- [[Action]] result
 ## Methods
 -

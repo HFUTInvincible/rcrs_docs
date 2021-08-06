@@ -1,7 +1,8 @@
 ## Fields
 	- [[PathPlanning]] pathPlanning
 	- [[EntityID]] target
-	- TODO thresholdRest
+	- TODO int thresholdRest
+	  collapsed:: true
 		- Decide whether the agent needs to rest.
 		- Initialized in constructor
 		-
@@ -9,7 +10,8 @@
 		  this.thresholdRest = developData.getInteger( "ActionExtMove.rest", 100 );
 		  ```
 		- Used in ((cea5625f-888a-42fb-bcb3-24366c202ef7))
-	- TODO kernelTime
+	- TODO int kernelTime
+	  collapsed:: true
 		- Initialized in precompute, resume, preparate
 		-
 		  ``` java

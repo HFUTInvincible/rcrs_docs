@@ -5,6 +5,7 @@
 	- [[ExtAction]]
 	- [[ActionExtMove]]
 	- [[ActionTransport]]
+	- [[ActionExtClear]]
 -
 - {{query [[TODO]]}}
 - {{query [[FIXME]]}}
