@@ -1,4 +1,4 @@
-- ![](https://ftp.bmp.ovh/imgs/2021/07/c3e6f3a747bb7c88.png)
+- ![](https://ftp.bmp.ovh/imgs/2021/07/c3e6f3a747bb7c88.png){:height 697, :width 706}
 ### 黑色部分
 	- 不可变，我们使用黑色部分的组件来获取信息、通讯、控制智能体的行动。
 ### 蓝色部分
