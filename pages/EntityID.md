@@ -1,0 +1,1 @@
+- [[EntityID]] is the unique identifier of an entity.
