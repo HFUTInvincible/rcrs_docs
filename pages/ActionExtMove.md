@@ -1,7 +1,7 @@
 ## Fields
 	- [[PathPlanning]] pathPlanning
 	- [[EntityID]] target
-	- TODO int thresholdRest
+	- int thresholdRest
 	  collapsed:: true
 		- Decide whether the agent needs to rest.
 		- Initialized in constructor
@@ -10,7 +10,7 @@
 		  this.thresholdRest = developData.getInteger( "ActionExtMove.rest", 100 );
 		  ```
 		- Used in ((cea5625f-888a-42fb-bcb3-24366c202ef7))
-	- TODO int kernelTime
+	- int kernelTime
 	  collapsed:: true
 		- Initialized in precompute, resume, preparate
 		-
@@ -25,7 +25,7 @@
 	- [[HfutMessageTool]] messageTool
 -
 ## Methods
-	- TODO setTarget()
+	- setTarget()
 	  collapsed:: true
 		-
 		  ``` java
@@ -56,7 +56,7 @@
 		  entity.getStandardURN().equals( StandardEntityURN.BLOCKADE )
 		  entity instanceof Blokade
 		  ```
-	- TODO calc()
+	- calc()
 	  collapsed:: true
 		-
 		  ``` java
@@ -83,7 +83,7 @@
 		      return this;
 		  }
 		  ```
-	- TODO needRest( [[Human]] agent)
+	- needRest( [[Human]] agent)
 	  id:: cea5625f-888a-42fb-bcb3-24366c202ef7
 	  collapsed:: true
 		- Determine whether the agent need to rest.
@@ -107,7 +107,7 @@
 		              || (activeTime + this.agentInfo.getTime()) < this.kernelTime;
 		  }
 		  ```
-	- TODO [[Action]] calcRest( [[Human]] human, [[PathPlanning]] pathPlanning, [[EntityID]] target) #FIXME
+	- [[Action]] calcRest( [[Human]] human, [[PathPlanning]] pathPlanning, [[EntityID]] target) #FIXME
 	  collapsed:: true
 		-
 		  ``` java

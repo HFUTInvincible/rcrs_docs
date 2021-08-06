@@ -1,5 +1,5 @@
 ## Intro
-	- Writing **API documentation** is very helpful for us to understand rcrs project.
+	- This is a documentation about _Robocup Rescue_ maintained by _HFUTInvincible_.
 	- [[Usage]]
 ## Contents
 	- [[ExtAction]]
@@ -7,7 +7,6 @@
 	- [[ActionTransport]]
 	- [[ActionExtClear]]
 -
-- {{query [[TODO]]}}
 - {{query [[FIXME]]}}
   query-table:: false
 ## Thanks

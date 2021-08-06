@@ -1,3 +1,5 @@
+## Class
+	- [[ExtAction]] => [[ActionExtClear]]
 ## Fields
 	- [[PathPlanning]] pathPlanning
 	- [[EntityID]] target
