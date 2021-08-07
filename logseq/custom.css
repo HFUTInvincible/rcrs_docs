@@ -33,6 +33,23 @@ body {
     background-color: var(--ls-block-bullet-color,#394b59);
 }*/
 
+.ls-block:hover .bullet {
+    background-color: var(--ls-block-bullet-color,#394b59);
+    z-index: 9999;
+}
+
+.bullet-container .bullet {
+    background-color: transparent;
+}
+
+.block-children {
+    border-left: 1px solid transparent;
+}
+
+.block-children:hover {
+    border-left: 1px solid;
+    border-left-color: var(--ls-guideline-color,#ddd);
+}
 
 .cm-s-solarized .CodeMirror-gutters {
   background-color: transparent;
@@ -94,20 +111,6 @@ body {
 }
 
 .embed-page .CodeMirror-linenumber {
-    background-color: transparent;
-}
-
-.references-blocks .CodeMirror-lines {
-    background-color:#f3f3f3;
-    border-color:#f3f3f3;
-    border-color:#f3f3f3;
-}
-
-.references-blocks .CodeMirror-gutter {
-    background-color: #f7f7f7;
-}
-
-.references-blocks .CodeMirror-linenumber {
     background-color: transparent;
 }
 
