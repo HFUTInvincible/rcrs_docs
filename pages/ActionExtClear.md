@@ -21,6 +21,101 @@
 	- [[ExtAction]] updateInfo([[MessageManager]] messageManager)
 	- [[ExtAction]] setTarget([[EntityID]] target)
 	- [[ExtAction]] calc()
+		-
+		  ``` java
+		  @Override
+		  public ExtAction calc() {
+		    
+		      getTheInfomationOfTheWorld();
+		  
+		      this.result = null;
+		      PoliceForce policeForce = (PoliceForce) this.agentInfo.me();
+		  
+		      if (this.needRest(policeForce)) {
+		          List<EntityID> list = new ArrayList<>();
+		          if (this.target != null) {
+		              list.add(this.target);
+		          }
+		          this.result = this.calcRest(policeForce, this.pathPlanning, list);
+		          if (this.result != null) {
+		              this.lastLocationX = policeForce.getX();
+		              this.lastLocationY = policeForce.getY();
+		              return this;
+		          }
+		      }
+		  
+		      if (this.target == null) {
+		          return this;
+		      }
+		  
+		      //EntityID agentPosition = policeForce.getPosition();
+		      StandardEntity targetEntity = this.worldInfo.getEntity(this.target);
+		      StandardEntity positionEntity =
+		              Objects.requireNonNull(this.worldInfo.getEntity(policeForce.getPosition()));
+		  
+		      if (targetEntity == null || !(targetEntity instanceof Area)) {
+		          return this;
+		      }
+		  
+		    	// if last target is not completed, continue to do it
+		      if (this.JudgeWhetherINeedContinue) {
+		          this.result = this.getTheContinueAction(policeForce);
+		          if (this.result != null) {
+		              this.lastLocationX = policeForce.getX();
+		              this.lastLocationY = policeForce.getY();
+		              return this;
+		          }
+		      }
+		    
+		    	// 按警察和目标的相对位置，分以下三种情况
+		      // 1. 警察所在位置就是目标位置
+		      if ((policeForce.getPosition()).equals(this.target)) {
+		          this.result = this.getAreaClearAction(policeForce);
+		      }
+		      // 2. 警察所在 area 和目标 area 相邻 (有公共边)
+		      else if (((Area) targetEntity).getEdgeTo(policeForce.getPosition()) != null) {
+		          this.result = this.getNeighbourAction(policeForce, (Area) targetEntity);
+		      }
+		    	// 3. 警察和目标隔开
+		      else {
+		          List<EntityID> path = this.pathPlanning.getResult(policeForce.getPosition(),
+		                                                            this.target);
+		          if (path != null && path.size() > 0) {
+		              int index = path.indexOf(policeForce.getPosition());
+		              if (index == -1) { // 警察的位置不在找到的 path 里
+		                  Area area = (Area) positionEntity;
+		                  for (int i = 0; i < path.size(); i++) {
+		                      if (area.getEdgeTo(path.get(i)) != null) { //
+		                          // 找到第一个和起点所在区域相邻的位置
+		                          index = i; // 找到即记录其索引
+		                          break;
+		                      }
+		                  }
+		              }
+		              else if (index >= 0) { // 警察的位置在找到的 path 里
+		                  index++; // TODO
+		              }
+		              if (index >= 0 && index < (path.size())) {
+		                  StandardEntity entity = this.worldInfo.getEntity(path.get(index));
+		                  this.result = this.getNeighbourAction(policeForce, (Area) entity);
+		                  if (this.result != null && this.result.getClass() == ActionMove.class) {
+		                      if (!((ActionMove) this.result).getUsePosition()) {
+		                          this.result = null;
+		                      }
+		                  }
+		              }
+		              if (this.result == null) { // 否则沿路径移动
+		                  this.result = new ActionMove(path);
+		                  this.count = 0;
+		              }
+		          }
+		      }
+		      // 更新
+		      this.lastLocationX = policeForce.getX();
+		      this.lastLocationY = policeForce.getY();
+		      return this;
+		  }
+		  ```
 	- [[Action]] getAction()
 	- boolean isCurve([[Area]] previous, [[Area]] current, [[Area]] next, [[Vector2D]] edgeline)
 	- boolean isClearable([[PoliceForce]] policeForce, [[Blockade]] blockade, [[Vector2D]] clearline)
