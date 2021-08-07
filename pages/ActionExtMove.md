@@ -57,7 +57,6 @@
 		  entity instanceof Blokade
 		  ```
 	- calc()
-	  collapsed:: true
 		-
 		  ``` java
 		  @Override

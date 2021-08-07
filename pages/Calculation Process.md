@@ -1,4 +1,4 @@
-- ![WXw9l6.md.png](https://z3.ax1x.com/2021/07/30/WXw9l6.md.png){:height 223, :width 435}
+- ![WXw9l6.md.png](https://z3.ax1x.com/2021/07/30/WXw9l6.md.png){:height 222, :width 435}
 - 共分以下三种情况：
 	- 预计算过程：initialize() -> precompute() -> think()
 	- 完成预计算后开始的模拟：initialize() -> resume() -> think()
