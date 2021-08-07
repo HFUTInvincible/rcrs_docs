@@ -21,6 +21,8 @@
 	- [[ExtAction]] updateInfo([[MessageManager]] messageManager)
 	- [[ExtAction]] setTarget([[EntityID]] target)
 	- [[ExtAction]] calc()
+	  id:: 610d8541-3fe9-44b7-bfd8-1f93076ae25b
+	  collapsed:: true
 		-
 		  ``` java
 		  @Override
@@ -31,6 +33,7 @@
 		      this.result = null;
 		      PoliceForce policeForce = (PoliceForce) this.agentInfo.me();
 		  
+		      // 需要休息则试着休息
 		      if (this.needRest(policeForce)) {
 		          List<EntityID> list = new ArrayList<>();
 		          if (this.target != null) {
@@ -48,7 +51,7 @@
 		          return this;
 		      }
 		  
-		      //EntityID agentPosition = policeForce.getPosition();
+		      // EntityID agentPosition = policeForce.getPosition();
 		      StandardEntity targetEntity = this.worldInfo.getEntity(this.target);
 		      StandardEntity positionEntity =
 		              Objects.requireNonNull(this.worldInfo.getEntity(policeForce.getPosition()));
@@ -57,7 +60,7 @@
 		          return this;
 		      }
 		  
-		    	// if last target is not completed, continue to do it
+		    	// 如果上次目标没完成，则继续
 		      if (this.JudgeWhetherINeedContinue) {
 		          this.result = this.getTheContinueAction(policeForce);
 		          if (this.result != null) {
@@ -98,6 +101,7 @@
 		              if (index >= 0 && index < (path.size())) {
 		                  StandardEntity entity = this.worldInfo.getEntity(path.get(index));
 		                  this.result = this.getNeighbourAction(policeForce, (Area) entity);
+		                  // 如果得到的是一个 ActionMove 未指定目的地的实例，则丢弃
 		                  if (this.result != null && this.result.getClass() == ActionMove.class) {
 		                      if (!((ActionMove) this.result).getUsePosition()) {
 		                          this.result = null;
@@ -110,7 +114,7 @@
 		              }
 		          }
 		      }
-		      // 更新
+		      // 更新位置信息
 		      this.lastLocationX = policeForce.getX();
 		      this.lastLocationY = policeForce.getY();
 		      return this;
@@ -124,6 +128,153 @@
 	- [[Vector2D]] scaleClear([[Vector2D]] vector)
 	- boolean intersectTwo([[Blockade]] blockade, [[Blockade]] another)
 	- [[Action]] getRescueAction(PoliceForce police, Edge nextEgde)
+	  collapsed:: true
+		-
+		  ``` java
+		  private Action getRescueAction(PoliceForce police, Edge nextEgde) {
+		  
+		      getTheInfomationOfTheWorld();
+		  
+		      EntityID position = police.getPosition();
+		      StandardEntity entity = this.worldInfo.getEntity(position);
+		    
+		      if (!(entity instanceof Road)) {
+		          return null;
+		      }
+		    
+		      Road road = (Road)entity;
+		    
+		      if (!road.isBlockadesDefined() || road.getBlockades().isEmpty()) {
+		          return null;
+		      }
+		      
+		      // get all other kinds of human in this area
+		      Set<Human> allTheHumanOnRoad = new HashSet<>();
+		  
+		      Collection<Blockade> blockades = this.worldInfo.getBlockades(road);
+		  
+		      for (StandardEntity tempEntity :
+		             this.worldInfo.getEntitiesOfType(
+		               StandardEntityURN.AMBULANCE_TEAM,
+		               StandardEntityURN.FIRE_BRIGADE,
+		               StandardEntityURN.CIVILIAN)) {
+		              Human human = (Human)tempEntity;
+		              if (human.isPositionDefined() &&
+		                  human.getPosition().equals(position) &&
+		                  human.isXDefined() &&
+		                  human.isYDefined()) {
+		                  allTheHumanOnRoad.add(human);
+		              }
+		      }
+		  
+		      Set<Human> theHumanBeStucked = new HashSet<>();
+		  
+		      // find those who were stucked by blockades
+		      for (Human human : allTheHumanOnRoad) {
+		          int humanPositionX = human.getX();
+		          int humanPositionY = human.getY();
+		          for (Blockade blockade : blockades) {
+		              if (this.isInside(humanPositionX, humanPositionY, blockade) ||
+		                  this.JudgeWhetherNearBlockade(humanPositionX, humanPositionY,
+		                                                blockade, 500)) {
+		                  theHumanBeStucked.add(human);
+		                  break;
+		              }
+		          }
+		  
+		      }
+		    
+		      allTheHumanOnRoad.clear();
+		  
+		      if (theHumanBeStucked.isEmpty()) {
+		          return null;
+		      }
+		      int policeX = police.getX();
+		      int policeY = police.getY();
+		  
+		      // find those who can be helped when clearing toward the next edge
+		      Set<Human> byTheWay = new HashSet<>();
+		  
+		      if (nextEgde != null) {
+		          Point2D midPosition = this.getMidPoint(nextEgde.getLine());
+		  
+		          int midPositionX = (int)midPosition.getX();
+		          int midPositionY = (int)midPosition.getY();
+		  
+		          for (Human human : theHumanBeStucked) {
+		              if (java.awt.geom.Line2D.ptLineDist(policeX, policeY,
+		                                                  midPositionX, midPositionY,
+		                                                  human.getX(), human.getY())
+		                      < this.myClearRadius *4/5) {
+		                  byTheWay.add(human);
+		              }
+		          }
+		          theHumanBeStucked.removeAll(byTheWay);
+		      }
+		      if (!theHumanBeStucked.isEmpty()) { //help the rest of human first
+		  
+		          byTheWay.clear();
+		  
+		          int bestTargetX = 0;
+		          int bestTargetY = 0;
+		        
+		          int count = -1;
+		        
+		          // find a direction that can help most human by one action
+		          for (Human human : theHumanBeStucked) {
+		              int humanX = human.getX();
+		              int humanY = human.getY();
+		  
+		              Vector2D vector = new Vector2D(humanX - policeX, humanY - policeY);
+		              if (vector.getLength() < this.theClearDistance) {
+		                  vector.normalised().scale(this.theClearDistance + 500);
+		              }
+		              humanX = policeX + (int)vector.getX();
+		              humanY = policeY + (int)vector.getY();
+		  
+		              int anotherCount = 0;
+		  
+		              for (Human other : theHumanBeStucked) {
+		                  if (other.equals(human)) {
+		                      continue;
+		                  }
+		                  if (java.awt.geom.Line2D.ptLineDist(humanX, humanY,
+		                                                      policeX, policeY,
+		                                                      other.getX(), other.getY())
+		                          < this.myClearRadius * 4 / 5) {
+		                      ++anotherCount;
+		                  }
+		              }
+		  
+		              if (anotherCount > count) {
+		                  count = anotherCount;
+		                  bestTargetX = humanX;
+		                  bestTargetY = humanY;
+		              }
+		              else if (anotherCount == count) {
+		                  if (this.worldInfo.getDistance(police,human) >
+		                          this.getDistance(policeX, policeY,bestTargetX, bestTargetY)) {
+		                      bestTargetX = humanX;
+		                      bestTargetY = humanY;
+		                  }
+		              }
+		          }
+		          this.lastDestinationX = bestTargetX;
+		          this.lastDestinationY = bestTargetY;
+		          this.JudgeWhetherINeedContinue = true;
+		          return this.getTheContinueAction(police);
+		      }
+		  
+		      if (!byTheWay.isEmpty()) { // then clear and move to the next edge
+		          Point2D point = this.getMidPoint(nextEgde.getLine());
+		          this.lastDestinationX = (int)point.getX();
+		          this.lastDestinationY = (int)point.getY();
+		          this.JudgeWhetherINeedContinue = true;
+		          return this.getTheContinueAction(police);
+		      }
+		      return null; // impossible branch
+		  }
+		  ```
 	- [[Action]] getNeighbourAction(PoliceForce police, Area target)
 	- [[Action]] calcRest([[Human]] human, [[PathPlanning]] pathPlanning, Collection<[[EntityID]]> targets)
 	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range) #TODO
@@ -140,6 +291,79 @@
 		  }
 		  ```
 	- [[Action]] getAreaClearAction([[PoliceForce]] police)
+		- 只在 ((610d8541-3fe9-44b7-bfd8-1f93076ae25b)) 里，当警察在目标上时使用
+		-
+		  ``` java
+		  private Action getAreaClearAction(PoliceForce police) {
+		  
+		      getTheInfomationOfTheWorld();
+		  
+		      EntityID policePosition = police.getPosition();
+		      StandardEntity entity = this.worldInfo.getEntity(policePosition);
+		      if (!(entity instanceof Road)) { // 不在路上，没法接触清除
+		          return null;
+		      }
+		      Road road = (Road)entity;
+		    
+		      // 在路上，但路没堵住，不用清除
+		      if (!road.isBlockadesDefined() || road.getBlockades().isEmpty()) {
+		          return null;
+		      }
+		    
+		      // 能救人，先救人
+		      Action action = this.getRescueAction(police, null); //help human first
+		      if (action != null) {
+		          return action;
+		      }
+		  
+		      // 获得警察所在 area (Road) 所有可通过的边
+		      List<Edge> allThePassableEdge = new ArrayList<>(this.getAllThePassableEdge(road));
+		  
+		      // 并将按到警察的距离升序排序
+		      allThePassableEdge.sort(new TheSortForEdge(new Point2D(police.getX(), police.getY())));
+		    
+		      // 由远及近考虑所有边
+		      for (int i = allThePassableEdge.size() - 1; i >= 0; --i) {
+		          // TODO: 为什么是中点？
+		          Point2D point = this.getMidPoint(allThePassableEdge.get(i).getLine());
+		  		// 尝试设置目的地为该边中点
+		          this.lastDestinationX = (int)point.getX();
+		          this.lastDestinationY = (int)point.getY();
+		          // 还只是移动到边缘，
+		          this.JudgeWhetherINeedContinue = true;
+		          action = this.getTheContinueAction(police);
+		          // 找到一条可行边即可返回
+		          if (action != null) {
+		              return action;
+		          }
+		      }
+		      
+		      // 对所有边的尝试均失败
+		      // 猜测：也就是警察自己被卡住了
+		      int roadX = road.getX();
+		      int roadY = road.getY();
+		  
+		      Collection<Blockade> blockades = this.worldInfo.getBlockades(road);
+		      for (Edge edge : allThePassableEdge) {
+		          Point2D midPoint = this.getMidPoint(edge.getLine());
+		          double midPointX = midPoint.getX();
+		          double midPointY = midPoint.getY();
+		  
+		          Vector2D vector = (new Vector2D(roadX - midPointX, roadY - midPointY))
+		              .normalised().scale(250).getNormal();
+		          for (Blockade blockade : blockades) {
+		              if (this.intersect(roadX, roadY, midPointX, midPointY, blockade) ||
+		                      this.intersect(roadX + vector.getX(), roadY + vector.getY(),
+		                              midPointX + vector.getX(), midPointY + vector.getY(), blockade) ||
+		                      this.intersect(roadX - vector.getX(), roadY - vector.getY(),
+		                              midPointX - vector.getX(), midPointY - vector.getY(), blockade)) {
+		                  return new ActionClear(blockade); // 不能过人，则清除
+		              }
+		          }
+		      }
+		      return null;
+		  }
+		  ```
 	- [[Action]] getTheContinueAction([[PoliceForce]] police)
 	  collapsed:: true
 		-
