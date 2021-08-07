@@ -189,6 +189,29 @@
 	- double getAngle([[Vector2D]] v1, [[Vector2D]] v2)
 	- boolean JudgeWhetherNearBlockade(double pX, double pY, [[Blockade]] blockade, double range)
 	- boolean intersect([[Blockade]] blockade, [[Blockade]] another)
+		-
+		  ``` java
+		  private boolean intersect(double agentX, double agentY,
+		                            double pointX, double pointY, Blockade blockade) {
+		      List<Line2D> lines = GeometryTools2D.pointsToLines(
+		          GeometryTools2D.vertexArrayToPoints(blockade.getApexes()), true);
+		      for(Line2D line : lines) {
+		          Point2D start = line.getOrigin();
+		          Point2D end = line.getEndPoint();
+		          double startX = start.getX();
+		          double startY = start.getY();
+		          double endX = end.getX();
+		          double endY = end.getY();
+		          if(java.awt.geom.Line2D.linesIntersect(
+		                  agentX, agentY, pointX, pointY,
+		                  startX, startY, endX, endY
+		          )) {
+		              return true;
+		          }
+		      }
+		      return false;
+		  }
+		  ```
 	- boolean intersect(double agentX, double agentY, double pointX, double pointY, [[Blockade]] blockade)
 	- double getDistance(double fromX, double fromY, double toX, double toY)
 	- [[Point2D]] getMidPoint([[Line2D]] line)
