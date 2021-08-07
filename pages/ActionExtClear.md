@@ -326,13 +326,13 @@
 		      for (int i = allThePassableEdge.size() - 1; i >= 0; --i) {
 		          // TODO: 为什么是中点？
 		          Point2D point = this.getMidPoint(allThePassableEdge.get(i).getLine());
-		  		// 尝试设置目的地为该边中点
+		  		// 
 		          this.lastDestinationX = (int)point.getX();
 		          this.lastDestinationY = (int)point.getY();
-		          // 还只是移动到边缘，
+		          // 
 		          this.JudgeWhetherINeedContinue = true;
 		          action = this.getTheContinueAction(police);
-		          // 找到一条可行边即可返回
+		          // 
 		          if (action != null) {
 		              return action;
 		          }
@@ -357,7 +357,7 @@
 		                              midPointX + vector.getX(), midPointY + vector.getY(), blockade) ||
 		                      this.intersect(roadX - vector.getX(), roadY - vector.getY(),
 		                              midPointX - vector.getX(), midPointY - vector.getY(), blockade)) {
-		                  return new ActionClear(blockade); // 不能过人，则清除
+		                  return new ActionClear(blockade); // 不能过人，则使用接触清除
 		              }
 		          }
 		      }
@@ -365,10 +365,9 @@
 		  }
 		  ```
 	- [[Action]] getTheContinueAction([[PoliceForce]] police)
-	  collapsed:: true
 		-
 		  ``` java
-		  private Action getTheContinueAction(PoliceForce police) { //basic function
+		  private Action getTheContinueAction(PoliceForce police) { // basic function
 		  
 		      getTheInfomationOfTheWorld();
 		  
@@ -407,7 +406,8 @@
 		              covers.add(blockade);
 		          }
 		      }
-		      if (!covers.isEmpty()) { //if police is covered by blockade, clear it first
+		      // 如果警察自己被困住，用接触清除方法先清理自己身上的障碍物
+		      if (!covers.isEmpty()) {
 		          return new ActionClear((Blockade) this.getTheClosestEntity(covers,
 		                                                                     this.agentInfo.me()));
 		      }
@@ -420,6 +420,7 @@
 		      int clearX = policeX + (int) vector.getX();
 		      int clearY = policeY + (int) vector.getY();
 		  
+		      // 下面的 300 和 200 有什么特别意义吗？范围清理那个长方形框的大小？为什么还能往后呢？
 		      vector = vector.normalised().scale(-300);
 		  
 		      int startX = policeX + (int) vector.getX();
@@ -428,6 +429,10 @@
 		      vector = vector.normalised().scale(250).getNormal();
 		      List<Blockade> removeBlockadesList = new ArrayList<>();
 		  
+		      // 根据距离确定清除范围是否足够
+		      // farPosition 记录的是最远点的坐标
+		      // 若目标超出清除范围，则目标点 (lastDestinationX, lastDestinationY) 即为最远点
+		      // 否则为能清除到的最远点 (clearX, clearY)
 		      int farPositionX = this.getDistance(policeX,
 		                                          policeY,
 		                                          this.lastDestinationX,
@@ -437,8 +442,12 @@
 		    
 		      int farPositionY = farPositionX == clearX ? clearY : this.lastDestinationY;
 		  
-		      //functions in java.awt.geom.Area are not fast enough
+		      // 根据语义猜测，下面循环的作用是找出所有不在清除范围内的障碍物
+		      // 并将之从 blokades 中删除，只留下能清除到的障碍物
 		      for (Blockade blockade : blockades) {
+		          // 以下 if(!(...)) 中，只有所有条件均为假，整个条件表达式的值才为真
+		          // 不是只能像一个方向清除吗？怎么还有往后比较的呢？
+		          // 用五条线是否和障碍物相交，来判断障碍物是否再清理区域内
 		          if (!(this.intersect(startX, startY, farPositionX, farPositionY, blockade) ||
 		                  this.intersect(policeX, policeY,
 		                                 farPositionX + vector.getX(),
@@ -460,6 +469,7 @@
 		      blockades.removeAll(removeBlockadesList);
 		      removeBlockadesList.clear();
 		  
+		      // 如果所有障碍物都没法清除，返回
 		      if (blockades.isEmpty()) {
 		          this.lastDestinationX = 0;
 		          this.lastDestinationY = 0;
@@ -467,8 +477,10 @@
 		          return null;
 		      }
 		  
+		      // 否则优先清除最近的
 		      Blockade closest = (Blockade)this.getTheClosestEntity(blockades, police);
 		  
+		      // 再判断一次？？ 
 		      if (!(this.intersect(startX, startY, clearX, clearY, closest) ||
 		              this.intersect(startX - vector.getX(), startY - vector.getY(),
 		                      clearX + vector.getX(), clearY + vector.getY(), closest) ||
@@ -482,6 +494,7 @@
 		                                lastDestinationY);
 		      }
 		      else {
+		          // 防止反复清理一个地方？
 		          if (this.equalsPoint(clearX, clearY, this.oldClearX, this.oldClearY, 1000)) {
 		              ++this.count;
 		              if (this.count >= this.forcedMove) {
@@ -491,13 +504,14 @@
 		                  return new ActionMove(Lists.newArrayList(position), clearX, clearY);
 		              }
 		          }
+		          // 记录
 		          this.oldClearX = clearX;
 		          this.oldClearY = clearY;
+		          // 返回范围清理
 		          return new ActionClear(clearX, clearY);
 		      }
 		  ```
 	- boolean isInside(double pX, double pY, [[Blockade]] blockade)
-	  collapsed:: true
 		- 判断点是否在障碍物内部
 		-
 		  ``` java

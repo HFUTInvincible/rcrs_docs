@@ -18,8 +18,8 @@
 		      return new Vector2D(this.dx * amount, this.dy * amount);
 		  }
 		  ```
-	- [[Vector2D]] getNormal()
-		- 获得当前向量的法向量 (长度相同，但与当前向量垂直)
+	- [[Vector2D]] getNormal() #TODO
+		- 计算法向量，方向遵循右手螺旋定则
 		-
 		  ```java
 		  public Vector2D getNormal() {
