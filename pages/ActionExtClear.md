@@ -128,7 +128,25 @@
 	- [[Vector2D]] scaleClear([[Vector2D]] vector)
 	- boolean intersectTwo([[Blockade]] blockade, [[Blockade]] another)
 	- [[Action]] getRescueAction(PoliceForce police, Edge nextEgde)
-	  collapsed:: true
+		- 在 ((610d8541-79f1-4987-bdc5-c0f3145d4911)) 中使用：
+			-
+			  ``` java
+			  if(position instanceof Road) {
+			        Action tempAction = this.getRescueAction(police, edge);
+			        if (tempAction != null) {
+			            return  tempAction;
+			        }
+			        Point2D point = this.getMidPoint(edge.getLine());
+			        this.lastDestinationX = (int)point.getX();
+			        this.lastDestinationY = (int)point.getY();
+			        this.JudgeWhetherINeedContinue = true;
+			        tempAction = this.getTheContinueAction(police);
+			        if (tempAction != null) {
+			            return tempAction;
+			        }
+			    }
+			  ```
+			- 此处调用传入了 `nextEdge` 参数，可以理解为一个 guard：我打算清理这条边了，你看行不行，guard 可能会说：我看看，嗯，你这样不能让你所在的 Area 里的所有人全部脱困，先把你救不到的那些人救了再说。(有问题)
 		-
 		  ``` java
 		  private Action getRescueAction(PoliceForce police, Edge nextEgde) {
@@ -148,11 +166,11 @@
 		          return null;
 		      }
 		      
-		      // get all other kinds of human in this area
 		      Set<Human> allTheHumanOnRoad = new HashSet<>();
 		  
 		      Collection<Blockade> blockades = this.worldInfo.getBlockades(road);
 		  
+		      // 获得该警察所在区域除警察外的其他人类
 		      for (StandardEntity tempEntity :
 		             this.worldInfo.getEntitiesOfType(
 		               StandardEntityURN.AMBULANCE_TEAM,
@@ -169,11 +187,12 @@
 		  
 		      Set<Human> theHumanBeStucked = new HashSet<>();
 		  
-		      // find those who were stucked by blockades
+		      // 找出被卡住的人
 		      for (Human human : allTheHumanOnRoad) {
 		          int humanPositionX = human.getX();
 		          int humanPositionY = human.getY();
 		          for (Blockade blockade : blockades) {
+		              // 人在障碍物内部或者距离障碍物过近 ？？判定为被卡住
 		              if (this.isInside(humanPositionX, humanPositionY, blockade) ||
 		                  this.JudgeWhetherNearBlockade(humanPositionX, humanPositionY,
 		                                                blockade, 500)) {
@@ -186,13 +205,14 @@
 		    
 		      allTheHumanOnRoad.clear();
 		  
+		      // 没有人被卡，就不用救了
 		      if (theHumanBeStucked.isEmpty()) {
 		          return null;
 		      }
 		      int policeX = police.getX();
 		      int policeY = police.getY();
 		  
-		      // find those who can be helped when clearing toward the next edge
+		      // 找出那些能够在向前清理 nextEdge 时顺路帮忙脱困的人
 		      Set<Human> byTheWay = new HashSet<>();
 		  
 		      if (nextEgde != null) {
@@ -202,6 +222,7 @@
 		          int midPositionY = (int)midPosition.getY();
 		  
 		          for (Human human : theHumanBeStucked) {
+		              // ptLineDist 用于计算点到直线的距离
 		              if (java.awt.geom.Line2D.ptLineDist(policeX, policeY,
 		                                                  midPositionX, midPositionY,
 		                                                  human.getX(), human.getY())
@@ -211,7 +232,9 @@
 		          }
 		          theHumanBeStucked.removeAll(byTheWay);
 		      }
-		      if (!theHumanBeStucked.isEmpty()) { //help the rest of human first
+		    
+		      // 如果还有未脱困的人，继续救人
+		      if (!theHumanBeStucked.isEmpty()) {
 		  
 		          byTheWay.clear();
 		  
@@ -220,7 +243,7 @@
 		        
 		          int count = -1;
 		        
-		          // find a direction that can help most human by one action
+		          // 找出一个方向能够在一个 action 里救最多的人
 		          for (Human human : theHumanBeStucked) {
 		              int humanX = human.getX();
 		              int humanY = human.getY();
@@ -276,6 +299,7 @@
 		  }
 		  ```
 	- [[Action]] getNeighbourAction(PoliceForce police, Area target)
+	  id:: 610d8541-79f1-4987-bdc5-c0f3145d4911
 	- [[Action]] calcRest([[Human]] human, [[PathPlanning]] pathPlanning, Collection<[[EntityID]]> targets)
 	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range) #TODO
 	  collapsed:: true
@@ -291,6 +315,7 @@
 		  }
 		  ```
 	- [[Action]] getAreaClearAction([[PoliceForce]] police)
+	  collapsed:: true
 		- 只在 ((610d8541-3fe9-44b7-bfd8-1f93076ae25b)) 里，当警察在目标上时使用
 		-
 		  ``` java
@@ -365,6 +390,7 @@
 		  }
 		  ```
 	- [[Action]] getTheContinueAction([[PoliceForce]] police)
+	  collapsed:: true
 		-
 		  ``` java
 		  private Action getTheContinueAction(PoliceForce police) { // basic function
@@ -512,6 +538,7 @@
 		      }
 		  ```
 	- boolean isInside(double pX, double pY, [[Blockade]] blockade)
+	  collapsed:: true
 		- 判断点是否在障碍物内部
 		-
 		  ``` java
