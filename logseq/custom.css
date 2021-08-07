@@ -64,7 +64,7 @@ body {
     border-left:15px solid;
     border-bottom:2px solid;
     border-top:2px solid;
-    border-color:#f5f5f5;
+    border-color:#f7f7f7;
     border-radius:3px
 }
 
@@ -76,4 +76,30 @@ body {
 .extensions__code-lang {
     color: transparent;
     background-color: transparent;
+}
+
+.px-3.pt-1.pb-2 .CodeMirror-linenumber {
+    background-color: #f7f7f7;
+}
+
+.px-3.pt-1.pb-2 .CodeMirror-gutter {
+    background-color: #f7f7f7;
+}
+
+.sidebar-item .CodeMirror-gutter {
+    background-color: #f7f7f7;
+}
+
+.sidebar-item .CodeMirror-linenumber {
+    background-color: transparent;
+}
+
+.sidebar-item .CodeMirror-lines {
+    background-color:#f3f3f3;
+    border-color:#f3f3f3;
+    border-color:#f3f3f3;
+}
+
+textarea {
+    background-color: #f1eee8;
 }

@@ -31,7 +31,19 @@
 	- [[Action]] getRescueAction(PoliceForce police, Edge nextEgde)
 	- [[Action]] getNeighbourAction(PoliceForce police, Area target)
 	- [[Action]] calcRest([[Human]] human, [[PathPlanning]] pathPlanning, Collection<[[EntityID]]> targets)
-	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range)
+	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range) #TODO
+	  collapsed:: true
+		- 把点看成半径为 range 的圆
+		- 该函数返回 true 当且仅当 p1 内含于 p2
+		- 字面上看该函数的作用是判断两点是否为同一点
+		-
+		  ``` java
+		  private boolean equalsPoint(double p1X, double p1Y,
+		                              double p2X, double p2Y, double range) {
+		      return (p2X - range < p1X && p1X < p2X + range)
+		          && (p2Y - range < p1Y && p1Y < p2Y + range);
+		  }
+		  ```
 	- [[Action]] getAreaClearAction([[PoliceForce]] police)
 	- [[Action]] getTheContinueAction([[PoliceForce]] police)
 	  collapsed:: true
@@ -189,6 +201,8 @@
 	- double getAngle([[Vector2D]] v1, [[Vector2D]] v2)
 	- boolean JudgeWhetherNearBlockade(double pX, double pY, [[Blockade]] blockade, double range)
 	- boolean intersect([[Blockade]] blockade, [[Blockade]] another)
+	  collapsed:: true
+		- 判断给定直线 (agentX, agentY) - (pointX, pointY) 是否与障碍物相交
 		-
 		  ``` java
 		  private boolean intersect(double agentX, double agentY,
@@ -219,3 +233,5 @@
 	- boolean needRest([[Human]] agent)
 	- [[StandardEntity]] getTheClosestEntity(Collection<? extends [[StandardEntity]]> entities, [[StandardEntity]] reference)
 	- void getTheInfomationOfTheWorld()
+## Subclass
+	- [[TheSortForEdge]]
