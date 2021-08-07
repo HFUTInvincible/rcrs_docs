@@ -22,7 +22,6 @@
 	- [[ExtAction]] setTarget([[EntityID]] target)
 	- [[ExtAction]] calc()
 	  id:: 610d8541-3fe9-44b7-bfd8-1f93076ae25b
-	  collapsed:: true
 		-
 		  ``` java
 		  @Override
@@ -302,7 +301,6 @@
 	  id:: 610d8541-79f1-4987-bdc5-c0f3145d4911
 	- [[Action]] calcRest([[Human]] human, [[PathPlanning]] pathPlanning, Collection<[[EntityID]]> targets)
 	- boolean equalsPoint(double p1X, double p1Y, double p2X, double p2Y, double range) #TODO
-	  collapsed:: true
 		- 把点看成半径为 range 的圆
 		- 该函数返回 true 当且仅当 p1 内含于 p2
 		- 字面上看该函数的作用是判断两点是否为同一点
@@ -315,7 +313,6 @@
 		  }
 		  ```
 	- [[Action]] getAreaClearAction([[PoliceForce]] police)
-	  collapsed:: true
 		- 只在 ((610d8541-3fe9-44b7-bfd8-1f93076ae25b)) 里，当警察在目标上时使用
 		-
 		  ``` java
@@ -390,7 +387,6 @@
 		  }
 		  ```
 	- [[Action]] getTheContinueAction([[PoliceForce]] police)
-	  collapsed:: true
 		-
 		  ``` java
 		  private Action getTheContinueAction(PoliceForce police) { // basic function
@@ -538,7 +534,6 @@
 		      }
 		  ```
 	- boolean isInside(double pX, double pY, [[Blockade]] blockade)
-	  collapsed:: true
 		- 判断点是否在障碍物内部
 		-
 		  ``` java
@@ -561,7 +556,6 @@
 	- double getAngle([[Vector2D]] v1, [[Vector2D]] v2)
 	- boolean JudgeWhetherNearBlockade(double pX, double pY, [[Blockade]] blockade, double range)
 	- boolean intersect([[Blockade]] blockade, [[Blockade]] another)
-	  collapsed:: true
 		- 判断给定直线 (agentX, agentY) - (pointX, pointY) 是否与障碍物相交
 		-
 		  ``` java

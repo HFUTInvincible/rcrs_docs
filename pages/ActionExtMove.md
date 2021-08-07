@@ -2,7 +2,6 @@
 	- [[PathPlanning]] pathPlanning
 	- [[EntityID]] target
 	- int thresholdRest
-	  collapsed:: true
 		- Decide whether the agent needs to rest.
 		- Initialized in constructor
 		-
@@ -11,7 +10,6 @@
 		  ```
 		- Used in ((cea5625f-888a-42fb-bcb3-24366c202ef7))
 	- int kernelTime
-	  collapsed:: true
 		- Initialized in precompute, resume, preparate
 		-
 		  ``` java
@@ -26,7 +24,6 @@
 -
 ## Methods
 	- setTarget()
-	  collapsed:: true
 		-
 		  ``` java
 		  @Override
@@ -57,7 +54,6 @@
 		  entity instanceof Blokade
 		  ```
 	- calc()
-	  collapsed:: true
 		-
 		  ``` java
 		  @Override
@@ -85,7 +81,6 @@
 		  ```
 	- needRest( [[Human]] agent)
 	  id:: cea5625f-888a-42fb-bcb3-24366c202ef7
-	  collapsed:: true
 		- Determine whether the agent need to rest.
 		-
 		  ``` java
@@ -108,7 +103,6 @@
 		  }
 		  ```
 	- [[Action]] calcRest( [[Human]] human, [[PathPlanning]] pathPlanning, [[EntityID]] target) #FIXME
-	  collapsed:: true
 		-
 		  ``` java
 		  private Action calcRest(Human human, PathPlanning pathPlanning, EntityID target) {
