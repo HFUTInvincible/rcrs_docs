@@ -5,6 +5,7 @@
 	- ### Topics
 		- [[Architecture of ADF]]
 		- [[Calculation Process]]
+		- [[Clustering Algorithms]]
 		- [[Glossary]]
 	- ### API Reference
 		- HFUTInvincibleRescue
