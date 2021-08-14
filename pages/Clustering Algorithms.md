@@ -17,18 +17,66 @@
 	- 步骤
 		- 随机选取一个样本作为第一个聚类中心
 		- 计算其余样本点到当前已有聚类中心的最短距离，并根据距离赋予每个点一个概率值，距离越远，这个值越大，最后使用轮盘法抽取一个点作为新的聚类中心。很明显，距离越远的点概率值越大，越有可能在轮盘法中被抽中作为新的聚类中心。
-		- 重复上一步，直到选出 n 个初始聚类中心
+		- 重复上一步，直到选出 k 个初始聚类中心
 		- 其余步骤同 K-Means 算法
-## Canopy + K-Means
+	- 实现
+		-
+		  ```java
+		  // K-Means++ 初始化
+		  public static List<Point2D> init(int maxNum) {
+		      List<Point2D> dataListCopy = new ArrayList<>(dataList);
+		      List<Point2D> centers = new ArrayList<>();
+		  
+		      // 随机选取一个样本作为第一个聚类中心
+		      centers.add(dataListCopy.remove(getRandomIndex(dataListCopy)));
+		  
+		      while (centers.size() < maxNum) {
+		          // 保存点到当前已有聚类中心的最短距离
+		          Map<Point2D, Double> minDistMap = new HashMap<>();
+		          // 所有最短距离的和，用于归一化求概率
+		          Double sum = 0.0;
+		  
+		          // 计算其余样本点到当前已有聚类中心的最短距离
+		          for (Point2D point: dataListCopy) {
+		              Double minDist = Double.MAX_VALUE;
+		              for (Point2D center: centers) {
+		                  Double dist = point.calcDistance(center);
+		                  if (dist < minDist) minDist = dist;
+		              }
+		              minDistMap.put(point, minDist);
+		              sum += minDist;
+		          }
+		  
+		          // 归一化，转换为概率
+		          for (Double value: minDistMap.values()) {
+		              value = value / sum;
+		          }
+		  
+		          // 轮盘算法
+		          Double tryit = Math.random();
+		          for (Map.Entry<Point2D, Double> entry: minDistMap.entrySet()) {
+		              tryit -= entry.getValue();
+		              if (tryit < 0) {
+		                  // 选中
+		                  centers.add(entry.getKey());
+		                  break;
+		              }
+		          }
+		      }
+		      return centers;
+		  }
+		  ```
+- ## Canopy + K-Means
 	- ### Canopy 算法
 		- Canopy 算法是一种粗聚类算法，其得到的聚类间可能有重复 (一个元素同时属于多个聚类)
 		- 步骤
 			- 给定两个阀值 $T_1$, $T_2$ 和样本集 $\boldsymbol{x}$
 			- 随机取出一个样本作为新聚类中心 (这里也叫 canopy)，考虑剩余样本 $x_i$ 到该聚类中心的距离 $d_i$
-				- 若 $d_i < T_1$         => $x_i$ 归入该 canopy，并从样本集中移除
-				- 若 $T_1 \leqslant d_i < T_2$   => $x_i$ 归入该 canopy，但保留在样本集中
-				- 若 $d_i > T_2$         => 继续
+				- 若 $d_i < T_1$ => $x_i$ 归入该 canopy，并从样本集中移除
+				- 若 $T_1 \leqslant d_i < T_2$ => $x_i$ 归入该 canopy，但保留在样本集中
+				- 若 $d_i > T_2$ => 继续
 			- 重复上一步，直到样本集 $\boldsymbol{x}$ 为空
+		- 实现
 			-
 			  ```java
 			  // 非常简单!!
@@ -88,6 +136,7 @@
 			- 优点
 				- 解决了 K-Means 必须指定簇数的缺点
 				- 解决了 K-Means 对初值和孤立数据点敏感的问题
+				- 可以通过舍弃点较少的簇，以解决噪声点的干扰
 ## Hierarchical Clustering
 	- 即系统 (层次) 聚类，优点在于无需指定簇数
 	- 样本间距离
