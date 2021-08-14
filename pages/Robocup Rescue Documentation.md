@@ -21,6 +21,7 @@
 				- [[ActionExtClear]]
 				- [[ActionExtMove]]
 				- [[ActionTransport]]
+		- [[HfutMessageTool]]
 ## Resources
 	- [RoboCup Rescue Simulator Manual (Official)](https://roborescue.github.io/rcrs-docs/rcrs-server/manual.pdf)
 	- [Agent Development Framework (ADF) Manual (Official)](https://roborescue.github.io/rcrs-docs/rcrs-adf/manual.pdf)
