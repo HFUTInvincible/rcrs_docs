@@ -1,19 +1,15 @@
 ## Intro
-	- 用于通讯的额基础工具类，由中心智能体使用。智能体的求救、例行报告自身情况都用这个类
+	- 用于通讯的基础工具类，由中心智能体使用。智能体的求救、例行报告自身情况都用这个类
 	- 所以警察、救护这些排智能体的求救、报告，实际上都是由中心智能体每周期遍历所有发生改变的智能体，然后根据自己的逻辑实现的吗？ #TODO
 ## Fields
 	- HashMap<[[EntityID]], [[EntityID]]> entrance2building
 	- [[EntityID]] dominanceAgentID
-	  collapsed:: true
 		- #TODO 调用方中心智能体？
 	- Set<[[EntityID]]> receivedPassableRoads
-	  collapsed:: true
 		- 在中心智能体的认知里，所有可以通过的路构成的集合
 		- 初始化和后续更新都在 ((611765ab-25bf-4508-abe6-f4ec760c1f75)) 里。
 		- 注意：更新时如果发现有建筑可能倒塌，堵塞原来可以通行的路，则要全部清除重新计算
-		-
 	- [[EntityID]] dominanceAgentID
-	  collapsed:: true
 		- 使用这个类的中心智能体编号？ #TODO
 		- 初始化和更新都在 ((611765ab-25bf-4508-abe6-f4ec760c1f75)) 里
 		  later:: 1628925781983
@@ -22,7 +18,6 @@
 	  done:: 1628922188563
 	  now:: 1628922187963
 	  later:: 1628922008605
-	  collapsed:: true
 		- 为这个周期发送过信息智能体打上时间戳
 		-
 		  ``` java
@@ -50,7 +45,6 @@
 		  ```
 	- void updateInfo([[AgentInfo]] agentInfo, [[WorldInfo]] worldInfo, [[ScenarioInfo]] scenarioInfo, [[MessageManager]] messageManager)
 	  id:: 611765ab-25bf-4508-abe6-f4ec760c1f75
-	  collapsed:: true
 		-
 		  ```java
 		  private void updateInfo(AgentInfo agentInfo, WorldInfo worldInfo,
@@ -150,7 +144,6 @@
 		  ```
 	- void sendInformationMessages( [[AgentInfo]] agentInfo, [[WorldInfo]] worldInfo, [[ScenarioInfo]] scenarioInfo, [[MessageManager]] messageManager)
 	  later:: 1628922096530
-	  collapsed:: true
 		- 报告智能体的最新情况，也就是发送 Information Message
 		-
 		  ```java
@@ -292,7 +285,6 @@
 		  }
 		  ```
 	- void sendRequestMessages( [[AgentInfo]] agentInfo, [[WorldInfo]] worldInfo, [[ScenarioInfo]] scenarioInfo, [[MessageManager]] messageManager)
-	  collapsed:: true
 		- 发送求救信息，比如被卡住了，就请警察来清障；被火困住了，就请消防来灭火
 		-
 		  ```java
@@ -667,7 +659,6 @@
 		  }
 		  ```
 	- Set< [[EntityID]] > getEntrancesOfBuilding([[Building]] building)
-	  collapsed:: true
 		- 使用 BFS，以建筑为中心逐层向外搜索，寻找建筑物的入口
 		-
 		  ``` java
