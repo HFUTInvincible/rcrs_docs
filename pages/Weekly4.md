@@ -110,6 +110,7 @@
       return channels;
   }
   ```
+- 我们写的 MessageCoordinator 中的 subscribe(...) 方法在这里被调用
 -
   ```java
   // In MessageManager, Called in think(...) in Agent
@@ -120,6 +121,7 @@
   
   }
   ```
+- 我们写的 ChannelSubscriber 中的 coordinate(...) 方法在这里被调用
 -
   ```java
   // In MessageManager, Called in think(...) in Agent
@@ -131,7 +133,9 @@
       }
   
       if (this.messageCoordinator != null) {
-          this.messageCoordinator.coordinate(agentInfo, worldInfo, scenarioInfo, this, this.sendMessageList, this.channelSendMessageList);
+          this.messageCoordinator.coordinate(agentInfo, worldInfo, scenarioInfo,
+                                             this, this.sendMessageList,
+                                             this.channelSendMessageList);
       }
   
   }
