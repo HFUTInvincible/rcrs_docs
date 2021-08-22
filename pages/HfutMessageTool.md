@@ -1,8 +1,23 @@
 ## Intro
 	- 在 [[MessageManager]] 的基础上，封装了一系列策略，提供了发送信息消息、发送请求等几个统一的接口供智能体调用
 ## Attention
-	- 官方也实现了一个不太好的 MessageTool，并不允许修改。
+	- 官方也实现了一个不太好的 MessageTool，并由于比赛规则，我们不能修改这个类
+	- 所以考虑自己实现一个相同功能的 [[HFUTMessageTools]] 类，将其加入一个每个周期都会调用的函数，并屏蔽掉官方实现的 MessageTool
+	- 官方实现的 MessageTool 发送的消息有明显的特征 (如下)，我们可以在分类投放时将所有这类消息过滤掉，实现对官方 MessageTool 的规避
+	- 当然，我们自己的 [[HfutMessageTool]] 里就不能发这种消息了，否则也会被过滤掉
 	-
+	  ```java
+	  if(msg instanceof StandardMessage){ //把所有的官方 MessageTool 发来的信息过滤掉
+	      StandardMessage smsg = (StandardMessage) msg;
+	      if(smsg.getSendingPriority() == StandardMessagePriority.LOW){
+	          continue;
+	      }
+	      if((smsg.getSendingPriority() == StandardMessagePriority.NORMAL) &&
+	              (smsg instanceof CommandPolice || smsg instanceof CommandFire || smsg instanceof CommandAmbulance)){
+	          continue;
+	      }
+	  }
+	  ```
 ## Fields
 	- HashMap<[[EntityID]], [[EntityID]]> entrance2building
 	- [[EntityID]] dominanceAgentID
