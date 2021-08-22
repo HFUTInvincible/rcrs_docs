@@ -2,7 +2,7 @@
 	- 通讯的基础类，每个类都有一个 MessageManager 实例，收发信息都通过它完成
 ## Fields
 	- ArrayList<[[CommunicationMessage]]> sendMessageList
-		- 要发送的消息都
+		- 要发送的消息
 	- List<List<[[CommunicationMessage]]>> channelSendMessageList
 		- 分类后的消息
 	- List<[[CommunicationMessage]]> receivedMessageList
@@ -21,7 +21,7 @@
 		      this.addMessage(message, true);
 		  }
 		  ```
-	- void addMessage(@Nonnull [[CommunicationMessage]] message, boolean checkDuplication){
+	- void addMessage(@Nonnull [[CommunicationMessage]] message, boolean checkDuplication)
 		-
 		  ```java
 		  CommunicationMessagepublic void addMessage(@Nonnull CommunicationMessage message, boolean checkDuplication){
@@ -61,6 +61,7 @@
 		      }
 		  ```
 	- void coordinateMessages([[AgentInfo]] agentInfo, [[WorldInfo]] worldInfo, [[ScenarioInfo]] scenarioInfo)
+	  id:: 6120c5ac-26b8-4854-ae03-fc3a6d9a6547
 		- 调用 [[MessageCoordinator]] 对消息进行分类投放
 		-
 		  ```java

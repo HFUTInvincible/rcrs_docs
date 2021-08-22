@@ -1,4 +1,5 @@
 ## Intro
+	- 为智能体的 MessageManager 订阅信道
 ## Methods
 	- void subscribe([[AgentInfo]] agentInfo, [[WorldInfo]] worldInfo, [[ScenarioInfo]] scenarioInfo, [[MessageManager]] messageManager)
 		-

@@ -129,6 +129,8 @@ body {
     background-color: transparent;
 }
 
+.extensions__code>.CodeMirror { max-width: 100% !important; }
+
 textarea {
     background-color: #f1eee8;
 }

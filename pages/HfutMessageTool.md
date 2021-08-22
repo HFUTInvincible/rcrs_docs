@@ -1,16 +1,16 @@
 ## Intro
-	- 用于通讯的基础工具类，由中心智能体使用。智能体的求救、例行报告自身情况都用这个类
-	- 所以警察、救护这些排智能体的求救、报告，实际上都是由中心智能体每周期遍历所有发生改变的智能体，然后根据自己的逻辑实现的吗？ #TODO
+	- 在 [[MessageManager]] 的基础上，封装了一系列策略，提供了发送信息消息、发送请求等几个统一的接口供智能体调用
+## Attention
+	- 官方也实现了一个不太好的 MessageTool，并不允许修改。
+	-
 ## Fields
 	- HashMap<[[EntityID]], [[EntityID]]> entrance2building
 	- [[EntityID]] dominanceAgentID
-		- #TODO 调用方中心智能体？
 	- Set<[[EntityID]]> receivedPassableRoads
 		- 在中心智能体的认知里，所有可以通过的路构成的集合
 		- 初始化和后续更新都在 ((611765ab-25bf-4508-abe6-f4ec760c1f75)) 里。
 		- 注意：更新时如果发现有建筑可能倒塌，堵塞原来可以通行的路，则要全部清除重新计算
 	- [[EntityID]] dominanceAgentID
-		- 使用这个类的中心智能体编号？ #TODO
 		- 初始化和更新都在 ((611765ab-25bf-4508-abe6-f4ec760c1f75)) 里
 		  later:: 1628925781983
 ## Methods
